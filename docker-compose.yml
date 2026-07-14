@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # 1. Database Service
+  mongodb:
+    image: mongo:latest
+    container_name: college_db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # 2. Backend API Service
+  backend:
+    build: ./backend # Path to your backend folder
+    container_name: college_backend
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URI=mongodb://localhost:27017/college-department-project
+      - JWT_SECRET=your_super_secret_jwt_key_here
+    depends_on:
+      - mongodb
+
+  # 3. Frontend Service
+  frontend:
+    build: ./frontend # Path to your frontend folder
+    container_name: college_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo_data:
