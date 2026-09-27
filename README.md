@@ -32,7 +32,7 @@ Create a `.env` file in your `backend` directory (or root if running a combined 
 MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/college_portal?retryWrites=true&w=majority
 JWT_SECRET=your_super_secret_jwt_key_here
 PORT=3000
-
+```
 ## Project Structure
 
 MyCollegePortal/
@@ -68,44 +68,48 @@ MyCollegePortal/
 
 
 ## Running the Application
-Using Docker (Recommended)
-Ensure Docker Desktop is running, navigate to the root folder (MyCollegePortal), and execute:
+### Using Docker (Recommended)
+Ensure Docker Desktop is running, navigate to the root folder (`MyCollegePortal`), and execute:
 
 ```Bash
-docker-compose up --build```
-The React Frontend will be available at http://localhost:80
+docker-compose up --build
+```
+The React Frontend will be available at `http://localhost:80`
 
-The Express Backend will be available at http://localhost:3000
+The Express Backend will be available at `http://localhost:3000`
 
-MongoDB will run automatically on port 27017
+MongoDB will run automatically on port `27017`
 
-Local Development (Manual)
-1. Start the Backend:
+## Local Development (Manual)
+### 1. Start the Backend:
 
-Bash
+```Bash
 cd backend
 npm install
 npm run dev
-2. Start the Frontend:
+```
+### 2. Start the Frontend:
 
-Bash
+```Bash
 cd FrontEnd
 npm install
 npm run dev
-API Endpoints
-All protected endpoints require an Authorization header formatted as: Bearer <jwt_token>.
+```
+## API Endpoints
+All protected endpoints require an `Authorization` header formatted as: `Bearer <jwt_token>`.
 
-Authentication & Users
-POST /auth/login
+## Authentication & Users
+## POST `/auth/login`
 Authenticates a user and provisions a session token.
-Request Body:
+### Request Body:
 
 ```JSON
 {
   "registrationId": "CSE-001",
   "password": "securepassword"
-}```
-Response (200 OK):
+}
+```
+### Response (200 OK):
 
 ```JSON
 {
@@ -113,11 +117,12 @@ Response (200 OK):
   "token": "eyJhbGciOiJIUzI1NiIs...",
   "role": "Student",
   "isFirstLogin": false
-}```
-POST /auth/register
+}
+```
+## POST `/auth/register`
 Registers a new user in the system.
 Constraint: Students cannot hit this route. Staff can only create Students. Admins can create Staff or Students.
-Request Body:
+### Request Body:
 
 ```JSON
 {
@@ -129,17 +134,18 @@ Request Body:
   "role": "Student",
   "department": "Computer Science",
   "semester": 3
-}```
-GET /auth/students?department=Computer Science&semester=3
+}
+```
+## GET `/auth/students?department=Computer Science&semester=3`
 Retrieves a filtered list of students for bulk operations.
 
-Attendance
-POST /attendance/bulk-mark
+## Attendance
+## POST `/attendance/bulk-mark`
 Submits an entire class roster's daily attendance in a single, optimized transaction.
 Constraint: Requires Staff or Admin role.
-Request Body:
+### Request Body:
 
-JSON
+```JSON
 {
   "date": "2026-09-27",
   "records": [
@@ -147,16 +153,17 @@ JSON
     { "studentId": "651a2b3c4d5e6f7a8b9c0d1f", "status": "Absent" }
   ]
 }
-GET /attendance/my-records
+```
+## GET `/attendance/my-records`
 Retrieves the logged-in student's historical attendance log.
 
-Examination Marks
-POST /exam-marks/addMark
+## Examination Marks
+## POST `/exam-marks/addMark`
 Uploads a single subject grade for a student.
 Constraint: Requires Staff or Admin role.
-Request Body:
+### Request Body:
 
-JSON
+```JSON
 {
   "registrationId": "CSE-001",
   "subject": "Data Structures",
@@ -164,17 +171,18 @@ JSON
   "marksObtained": 85,
   "totalMarks": 100
 }
-PUT /exam-marks/updateMark
+```
+## PUT `/exam-marks/updateMark`
 Overrides an existing grade.
 Constraint: Strictly requires Admin role.
 
-Timetable
-POST /timetable/create
+## Timetable
+## POST `/timetable/create`
 Allocates a class period to a staff member. Includes automated conflict screening to prevent double-booking.
 Constraint: Requires Admin role.
-Request Body:
+### Request Body:
 
-JSON
+```JSON
 {
   "department": "Computer Science",
   "semester": 3,
@@ -183,10 +191,11 @@ JSON
   "subject": "Data Structures",
   "staffId": "651a2b3c4d5e6f7a8b9c0d99"
 }
-GET /timetable/schedule/:department/:semester
+```
+## GET `/timetable/schedule/:department/:semester`
 Retrieves the 5x8 grid schedule for a specific academic class.
 
-Role-Based Access Control (RBAC)
+## Role-Based Access Control (RBAC)
 The system utilizes Express middleware (verifyToken) to enforce strict security boundaries:
 
 Admin: Root access. Can register staff, manipulate global timetables, overwrite historical attendance/marks, and resolve infrastructure tickets.
@@ -195,7 +204,7 @@ Staff: Departmental access. Can register students, submit daily bulk attendance,
 
 Student: Read-only access to personal profiles, attendance metrics, and report cards. Write access limited to submitting help desk complaints.
 
-Security Notes
+## Security Notes
 Password Hashing: All passwords are mathematically scrambled using bcrypt via Mongoose pre('save') hooks prior to database insertion.
 
 Stateless Sessions: The API utilizes JSON Web Tokens (JWT) with a 24-hour expiration lifecycle.
