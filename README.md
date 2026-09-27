@@ -34,7 +34,7 @@ JWT_SECRET=your_super_secret_jwt_key_here
 PORT=3000
 ```
 ## Project Structure
-
+```
 MyCollegePortal/
 ├── docker-compose.yml          # Container orchestration
 ├── backend/                    # Node.js / Express API
@@ -65,7 +65,7 @@ MyCollegePortal/
     │   │   └── StudentDashboard.jsx
     │   └── App.jsx
     └── package.json
-
+```
 
 ## Running the Application
 ### Using Docker (Recommended)
